@@ -12,7 +12,7 @@ import android.util.Log
 
 class IncrementBoundService : Service() {
 
-    private inner class IncrementBoundServiceHandler(looper: Looper): Handler(looper){
+    private inner class IncrementBoundServiceHandler(looper: Looper) : Handler(looper) {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
 
@@ -20,9 +20,11 @@ class IncrementBoundService : Service() {
                 clientMessenger = it
             }
 
-            msg.data.getInt("VALUE").also {
-                Log.v(this.javaClass.simpleName, "Returning incremented value.")
-                clientMessenger.send(Message.obtain().apply {data.putInt("VALUE", it + 1) })
+            msg.data.getInt("VALUE", -1).also {
+                if (it != -1) {
+                    Log.v(this.javaClass.simpleName, "Returning incremented value.")
+                    clientMessenger.send(Message.obtain().apply { data.putInt("VALUE", it + 1) })
+                }
             }
         }
     }
